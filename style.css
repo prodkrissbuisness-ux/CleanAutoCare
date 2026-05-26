@@ -73,6 +73,21 @@ nav a:hover {
   max-width: 850px;
 }
 
+.hero-locations {
+  position: absolute;
+  bottom: 30px;
+
+  width: 100%;
+  text-align: center;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  color: rgba(255,255,255,0.85);
+
+  letter-spacing: 1px;
+}
+
 .tag {
   color: #7dd3fc;
   font-weight: 700;
