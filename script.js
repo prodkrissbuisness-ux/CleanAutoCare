@@ -1,5 +1,23 @@
 // Small fade animation on scroll
 
+const heroImages = [
+  "./images/truckextB.jpeg",
+  "./images/truckbsB.jpeg",
+  "./images/truckfrtB.jpeg",
+  "./images/hero1.jpeg"
+];
+
+const randomImage =
+  heroImages[Math.floor(Math.random() * heroImages.length)];
+
+document.querySelector(".hero").style.backgroundImage =
+  `linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.45),
+    rgba(15,17,21,1)
+  ),
+  url('${randomImage}')`;
+
 const cards = document.querySelectorAll('.card, .price-card');
 
 const observer = new IntersectionObserver((entries) => {
