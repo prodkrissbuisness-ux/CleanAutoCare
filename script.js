@@ -11,18 +11,16 @@ const heroImages = [
   "./images/hero6.jpeg"
 ];
 
-const randomImage =
-  heroImages[Math.floor(Math.random() * heroImages.length)];
+const randomImage = heroImages[Math.floor(Math.random() * heroImages.length)];
+const heroSection = document.querySelector(".hero");
 
-document.querySelector(".hero").style.backgroundImage =
-  `linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.45),
-    rgba(15,17,21,1)
-  ),
-  url('${randomImage}')`;
+heroSection.style.backgroundImage = `linear-gradient(
+  to bottom,
+  rgba(0,0,0,0.45),
+  rgba(15,17,21,1)
+), url('${randomImage}')`;
 
-heroSection.style.backgroundSize = "100vh";
+heroSection.style.backgroundSize = "cover";
 heroSection.style.backgroundPosition = "center center";
 heroSection.style.backgroundRepeat = "no-repeat";
 
