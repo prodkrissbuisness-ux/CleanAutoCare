@@ -1,7 +1,6 @@
 // Small fade animation on scroll
 
 const heroImages = [
-  "./images/truckextB.jpeg",
   "./images/truckbsB.jpeg",
   "./images/truckfrtB.jpeg",
   "./images/hero1.jpeg"
