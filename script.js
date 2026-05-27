@@ -22,7 +22,7 @@ document.querySelector(".hero").style.backgroundImage =
   ),
   url('${randomImage}')`;
 
-heroSection.style.backgroundSize = "cover";
+heroSection.style.backgroundSize = "100vh";
 heroSection.style.backgroundPosition = "center center";
 heroSection.style.backgroundRepeat = "no-repeat";
 
