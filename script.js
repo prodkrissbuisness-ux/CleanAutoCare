@@ -22,6 +22,10 @@ document.querySelector(".hero").style.backgroundImage =
   ),
   url('${randomImage}')`;
 
+heroSection.style.backgroundSize = "cover";
+heroSection.style.backgroundPosition = "center center";
+heroSection.style.backgroundRepeat = "no-repeat";
+
 const cards = document.querySelectorAll('.card, .price-card');
 
 const observer = new IntersectionObserver((entries) => {
