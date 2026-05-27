@@ -3,11 +3,11 @@
 const heroImages = [
   "./images/truckbsB.jpeg",
   "./images/truckfrtB.jpeg",
-  "./images/hero1.jpeg"
-  "./images/hero2.jpeg"
-  "./images/hero3.jpeg"
-  "./images/hero4.jpeg"
-  "./images/hero5.jpeg"
+  "./images/hero1.jpeg",
+  "./images/hero2.jpeg",
+  "./images/hero3.jpeg",
+  "./images/hero4.jpeg",
+  "./images/hero5.jpeg",
   "./images/hero6.jpeg"
 ];
 
@@ -40,3 +40,5 @@ cards.forEach((card) => {
 
   observer.observe(card);
 });
+
+console.log("JS LOADED");
