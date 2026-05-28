@@ -213,45 +213,70 @@ nav a:hover {
 }
 
 
-.pricing-disclaimer,
+/* ADD-ONS BOX */
 .add-ons-box {
+  width: 100%;
   max-width: 1100px;
-  margin: 2rem auto 0 auto;
+
+  margin: 3rem auto 1.5rem auto;
 
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
 
-  border-radius: 24px;
-  padding: 2rem;
+  border-radius: 28px;
+  padding: 2.5rem;
 
   backdrop-filter: blur(10px);
 }
 
-.pricing-disclaimer h3,
 .add-ons-box h3 {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
 }
 
-.pricing-disclaimer p {
-  color: rgba(255,255,255,0.72);
-  line-height: 1.7;
-}
-
+/* INDIVIDUAL ADD-ONS */
 .addon-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 0.9rem 0;
+  padding: 1rem 0;
 
   border-bottom: 1px solid rgba(255,255,255,0.08);
 
-  color: rgba(255,255,255,0.82);
+  color: rgba(255,255,255,0.85);
+
+  font-size: 1.05rem;
 }
 
 .addon-item:last-child {
   border-bottom: none;
+}
+
+/* DISCLAIMER */
+.pricing-disclaimer {
+  max-width: 700px;
+
+  margin: 1.5rem auto 0 auto;
+
+  text-align: center;
+
+  background: rgba(255,255,255,0.025);
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  border-radius: 20px;
+
+  padding: 1.5rem;
+}
+
+.pricing-disclaimer h3 {
+  margin-bottom: 0.75rem;
+}
+
+.pricing-disclaimer p {
+  color: rgba(255,255,255,0.68);
+  line-height: 1.7;
 }
 
 .dark-section {
