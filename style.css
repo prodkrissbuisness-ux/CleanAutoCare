@@ -211,7 +211,31 @@ nav a:hover {
   font-size: 1.4rem;
   margin-bottom: 1rem;
 }
+.pricing-disclaimer {
+  background: #f5f5f5;
+  padding: 15px;
+  border-left: 4px solid #333;
+  margin-top: 20px;
+}
 
+.add-ons-box {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+.addons-item, .addon-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.addon-item:last-child {
+  border-bottom: none;
+}
 .card p,
 .price-card li,
 .contact-box p {
