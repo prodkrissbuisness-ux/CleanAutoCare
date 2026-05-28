@@ -213,36 +213,45 @@ nav a:hover {
 }
 
 
-.pricing-disclaimer {
-  background: #f5f5f5;
-  padding: 15px;
-  border-left: 4px solid #333;
-  margin-top: 20px;
-}
-
+.pricing-disclaimer,
 .add-ons-box {
-  background: #ffffff;
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-top: 20px;
-  border-radius: 8px;
+  max-width: 1100px;
+  margin: 2rem auto 0 auto;
+
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 24px;
+  padding: 2rem;
+
+  backdrop-filter: blur(10px);
 }
 
-.addons-item, .addon-item {
+.pricing-disclaimer h3,
+.add-ons-box h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.pricing-disclaimer p {
+  color: rgba(255,255,255,0.72);
+  line-height: 1.7;
+}
+
+.addon-item {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+
+  padding: 0.9rem 0;
+
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+
+  color: rgba(255,255,255,0.82);
 }
 
 .addon-item:last-child {
   border-bottom: none;
-}
-.card p,
-.price-card li,
-.contact-box p {
-  color: rgba(255,255,255,0.74);
-  line-height: 1.8;
 }
 
 .dark-section {
