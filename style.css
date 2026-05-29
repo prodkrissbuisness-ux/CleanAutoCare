@@ -337,6 +337,36 @@ nav a:hover {
   margin-bottom: 2rem;
 }
 
+.about-box {
+  max-width: 900px;
+
+  margin: auto;
+
+  background: rgba(255,255,255,0.03);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 28px;
+
+  padding: 2.5rem;
+
+  backdrop-filter: blur(10px);
+}
+
+.about-box p {
+  color: rgba(255,255,255,0.74);
+
+  line-height: 1.9;
+
+  margin-bottom: 1.5rem;
+
+  font-size: 1.05rem;
+}
+
+.about-box p:last-child {
+  margin-bottom: 0;
+}
+
 footer {
   text-align: center;
   padding: 2.5rem;
