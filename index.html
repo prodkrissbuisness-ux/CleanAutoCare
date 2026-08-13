@@ -22,7 +22,7 @@
   <link rel="icon" type="image/png" sizes="64x64" href="/images/favicon-64.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
   <link rel="preload" as="image" href="/images/mobile-auto-detailing-baraboo-wi.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="/style.css?v=20260813.2">
+  <link rel="stylesheet" href="/style.css?v=20260813.3">
 
   <script type="application/ld+json">
   {
@@ -386,6 +386,10 @@
           <input id="photos" type="file" name="photos" accept="image/*" multiple>
           <label for="location">Service location</label>
           <input id="location" type="text" name="location" autocomplete="street-address" placeholder="City or address" required>
+          <label class="consent-check" for="text-consent">
+            <input id="text-consent" type="checkbox" name="text_consent" value="I agree to receive text messages from Clean Auto Care about my quote, scheduling, and requested services." required>
+            <span>I agree to receive text messages from Clean Auto Care at the number provided about my quote, scheduling, and requested services. Message and data rates may apply. Reply STOP to opt out.</span>
+          </label>
           <button class="button button-primary submit-button" type="submit">Request My Quote</button>
           <p class="form-note">Submitting this form sends your details to Clean Auto Care for scheduling and quoting.</p>
         </form>
@@ -424,6 +428,6 @@
     </div>
   </footer>
 
-  <script src="/script.js?v=20260813.2" defer></script>
+  <script src="/script.js?v=20260813.3" defer></script>
 </body>
 </html>
