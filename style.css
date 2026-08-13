@@ -172,6 +172,7 @@ p { margin-bottom: 1.15rem; }
 .gallery-grid figcaption { position: absolute; inset: auto 0 0; padding: 2.2rem 1.2rem 1rem; color: var(--white); font-size: 0.9rem; font-weight: 750; background: linear-gradient(transparent, rgba(3,9,18,0.8)); }
 
 .pricing-grid { align-items: stretch; }
+.pricing-grid { grid-template-columns: repeat(4, 1fr); }
 .price-card { position: relative; color: var(--ink); }
 .price-card h3 { margin-bottom: 0.5rem; }
 .price-card .price { margin-bottom: 1.5rem; color: var(--ink); font-size: clamp(1.6rem, 3vw, 2.25rem); font-weight: 850; letter-spacing: -0.04em; }
@@ -181,6 +182,7 @@ p { margin-bottom: 1.15rem; }
 .check-list li { position: relative; padding: 0.55rem 0 0.55rem 1.7rem; color: #425063; border-bottom: 1px solid #e8eef4; }
 .check-list li:last-child { border-bottom: 0; }
 .check-list li::before { content: "✓"; position: absolute; left: 0; color: var(--blue); font-weight: 900; }
+.package-note { margin: 1.1rem 0 0; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
 .addons-panel { margin-top: 1.25rem; padding: clamp(1.6rem, 3vw, 2.3rem); background: var(--navy-2); border: 1px solid #25364c; border-radius: var(--radius); }
 .addons-panel h3 { margin-bottom: 1rem; }
 .addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
@@ -275,7 +277,7 @@ p { margin-bottom: 1.15rem; }
   .hero { min-height: 760px; }
   .hero-shade { background: linear-gradient(90deg, rgba(3,9,18,0.94), rgba(3,9,18,0.61)); }
   .split-layout, .contact-layout, .content-grid { grid-template-columns: 1fr; }
-  .card-grid, .process-grid { grid-template-columns: 1fr; }
+  .card-grid, .pricing-grid, .process-grid { grid-template-columns: 1fr; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .services-grid .card:last-child { grid-column: 1 / -1; }
   .contact-copy, .service-aside { position: static; }
