@@ -1,46 +1,16 @@
-// Small fade animation on scroll
+const menuButton = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('.main-nav');
 
-const heroImages = [
-  "./images/truckbsB.jpeg",
-  "./images/truckfrtB.jpeg",
-  "./images/hero1.jpeg",
-  "./images/hero2.jpeg",
-  "./images/hero3.jpeg",
-  "./images/hero4.jpeg",
-  "./images/hero5.jpeg",
-  "./images/hero6.jpeg"
-];
+if (menuButton && navigation) {
+  menuButton.addEventListener('click', () => {
+    const isOpen = navigation.classList.toggle('is-open');
+    menuButton.setAttribute('aria-expanded', String(isOpen));
+  });
 
-const randomImage = heroImages[Math.floor(Math.random() * heroImages.length)];
-const heroSection = document.querySelector(".hero");
-
-heroSection.style.backgroundImage = `linear-gradient(
-  to bottom,
-  rgba(0,0,0,0.45),
-  rgba(15,17,21,1)
-), url('${randomImage}')`;
-
-heroSection.style.backgroundSize = "cover";
-heroSection.style.backgroundPosition = "center center";
-heroSection.style.backgroundRepeat = "no-repeat";
-
-const cards = document.querySelectorAll('.card, .price-card');
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0px)';
+  navigation.addEventListener('click', (event) => {
+    if (event.target.closest('a')) {
+      navigation.classList.remove('is-open');
+      menuButton.setAttribute('aria-expanded', 'false');
     }
   });
-});
-
-cards.forEach((card) => {
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(20px)';
-  card.style.transition = 'all 0.6s ease';
-
-  observer.observe(card);
-});
-
-console.log("JS LOADED");
+}
