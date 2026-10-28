@@ -16,12 +16,12 @@
     Heavy: { 'Coupe or compact': 50, Sedan: 75, SUV: 100, 'Truck - small cab': 75, 'Truck - crew cab': 100 },
     'Very dirty / pet hair / stains': { 'Coupe or compact': 75, Sedan: 100, SUV: 150, 'Truck - small cab': 125, 'Truck - crew cab': 150 },
   };
-  // Minimums are included in the estimate. Add-ons not listed here are quoted after review.
-  const ADDON_MINIMUMS = {
-    'Pet hair removal': 30,
-    'Heavy stain treatment': 60,
+  // Ranged add-ons scale with vehicle size. Add-ons not listed here are quoted after review.
+  const ADDON_PRICES = {
+    'Pet hair removal': { 'Coupe or compact': 30, Sedan: 30, SUV: 60, 'Truck - small cab': 60, 'Truck - crew cab': 60 },
+    'Heavy stain treatment': { 'Coupe or compact': 60, Sedan: 60, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 100 },
     'Headlight restoration': 50,
-    'Ceramic paint protection (6 weeks)': 150,
+    'Ceramic paint protection (6 weeks)': { 'Coupe or compact': 150, Sedan: 150, SUV: 300, 'Truck - small cab': 300, 'Truck - crew cab': 300 },
   };
 
   form.classList.add('is-wizard');
@@ -49,6 +49,10 @@
 
   const selected = (name) => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
   const formatPrice = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
+  const addOnPrice = (addOn, size) => {
+    const price = ADDON_PRICES[addOn];
+    return typeof price === 'number' ? price : price?.[size];
+  };
 
   function updateEstimate() {
     const size = selected('size');
@@ -57,14 +61,14 @@
     const amount = PRICES[size]?.[service];
     const adjustment = CONDITION_ADJUSTMENTS[condition]?.[size];
     const selectedAddOns = [...form.querySelectorAll('input[name="addon_options"]:checked')].map((checkbox) => checkbox.value);
-    const addOnMinimum = selectedAddOns.reduce((sum, addOn) => sum + (ADDON_MINIMUMS[addOn] || 0), 0);
-    const separatelyQuotedAddOns = selectedAddOns.filter((addOn) => ADDON_MINIMUMS[addOn] == null);
+    const addOnTotal = selectedAddOns.reduce((sum, addOn) => sum + (addOnPrice(addOn, size) || 0), 0);
+    const separatelyQuotedAddOns = selectedAddOns.filter((addOn) => addOnPrice(addOn, size) == null);
     const isCustom = service === 'Deep-clean detail' || amount == null;
     form.querySelector('#summary-size').textContent = size || 'Not selected';
     form.querySelector('#summary-service').textContent = service || 'Not selected';
     form.querySelector('#summary-condition').textContent = selected('condition') || 'Not selected';
     addOnSummary.textContent = selectedAddOns.length
-      ? selectedAddOns.map((addOn) => ADDON_MINIMUMS[addOn] != null ? `${addOn} (+${formatPrice(ADDON_MINIMUMS[addOn])})` : `${addOn} (quoted separately)`).join(', ')
+      ? selectedAddOns.map((addOn) => addOnPrice(addOn, size) != null ? `${addOn} (+${formatPrice(addOnPrice(addOn, size))})` : `${addOn} (quoted separately)`).join(', ')
       : 'None selected';
 
     if (isCustom) {
@@ -81,18 +85,18 @@
 
     const basePrice = formatPrice(amount);
     const conditionPrice = formatPrice(adjustment || 0);
-    const estimate = amount + (adjustment || 0) + addOnMinimum;
+    const estimate = amount + (adjustment || 0) + addOnTotal;
     const price = formatPrice(estimate);
     total.textContent = price;
     form.querySelector('#summary-base').textContent = basePrice;
     form.querySelector('#summary-condition-price').textContent = adjustment > 0 ? `+${conditionPrice}` : 'Included';
     baseField.value = basePrice;
     adjustmentField.value = adjustment > 0 ? `+${conditionPrice}` : '$0';
-    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnMinimum)} for selected add-ons)`;
+    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnTotal)} for selected add-ons)`;
     subject.value = `Accepted Clean Auto Care estimate: ${price} — ${size}`;
     disclaimer.textContent = separatelyQuotedAddOns.length
-      ? `This estimate includes ${formatPrice(addOnMinimum)} for selected add-ons. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review. Travel or an in-person inspection may also require an updated estimate. No deposit or payment is collected online.`
-      : `This estimate includes ${formatPrice(addOnMinimum)} for selected add-ons. Travel or an in-person inspection may require an updated estimate. No deposit or payment is collected online.`;
+      ? `This estimate includes ${formatPrice(addOnTotal)} for selected add-ons. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review. Travel or an in-person inspection may also require an updated estimate. No deposit or payment is collected online.`
+      : `This estimate includes ${formatPrice(addOnTotal)} for selected add-ons. Travel or an in-person inspection may require an updated estimate. No deposit or payment is collected online.`;
   }
 
   function show(n, scroll) {
