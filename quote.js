@@ -88,7 +88,13 @@
     back.style.visibility = n === 0 ? 'hidden' : 'visible';
     next.style.display = n === steps.length - 1 ? 'none' : '';
     if (n === steps.length - 1) updateEstimate();
-    if (scroll) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    if (scroll) {
+      // Only scroll if the top of the form is hidden behind the header; otherwise leave the page alone.
+      const header = document.querySelector('.site-header');
+      const limit = (header ? header.offsetHeight : 0) + 12;
+      const top = form.getBoundingClientRect().top;
+      if (top < limit) window.scrollBy({ top: top - limit, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
   }
 
   function validStep() {

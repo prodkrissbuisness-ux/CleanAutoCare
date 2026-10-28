@@ -709,3 +709,6 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 @media (max-width: 900px) {
   .quote-intro h1 { font-size: clamp(3rem, 13vw, 5rem); }
 }
+
+/* Keep the quote form pinned near the top so it does not shift between steps */
+.quote-stage { align-items: flex-start; }
