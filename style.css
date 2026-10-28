@@ -693,3 +693,19 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .thanks-layout .quote-lead { max-width: 520px; }
 .thanks-layout .button-row { margin-top: 0.4rem; }
 .quote-page .button-secondary { color: var(--paper); }
+
+/* Quote + thank-you pages: plain charcoal background, everything centered */
+.quote-stage { background: radial-gradient(ellipse at 50% 30%, #2d2d2a 0%, #1e1e1c 55%, #151514 100%); }
+.quote-layout { grid-template-columns: minmax(0, 1fr); justify-items: center; max-width: 680px; margin-inline: auto; gap: 2rem; text-align: center; }
+.quote-intro { width: 100%; }
+.quote-intro .eyebrow { justify-content: center; }
+.quote-intro h1 { margin-bottom: 1rem; font-size: clamp(3rem, 7.5vw, 6.2rem); }
+.quote-lead { margin-inline: auto; }
+.quote-contact { display: none; }
+.thanks-layout .button-row { justify-content: center; }
+.quote-panel { width: 100%; text-align: left; }
+.quote-panel .quote-wizard { background: #121211; backdrop-filter: none; border-color: rgba(255, 255, 255, 0.1); }
+.quote-page .q-alt { text-align: center; }
+@media (max-width: 900px) {
+  .quote-intro h1 { font-size: clamp(3rem, 13vw, 5rem); }
+}
