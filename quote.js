@@ -38,6 +38,7 @@
   const adjustmentField = form.querySelector('#condition-adjustment');
   const estimateField = form.querySelector('#total-estimate');
   const addOnSummary = form.querySelector('#summary-addons');
+  const breakdown = form.querySelector('#quote-breakdown');
   let i = 0;
 
   const PKG = { interior: 'Interior detail', exterior: 'Exterior detail', full: 'Full detail', deep: 'Deep-clean detail' };
@@ -66,13 +67,14 @@
     const isCustom = service === 'Deep-clean detail' || amount == null;
     form.querySelector('#summary-size').textContent = size || 'Not selected';
     form.querySelector('#summary-service').textContent = service || 'Not selected';
-    form.querySelector('#summary-condition').textContent = selected('condition') || 'Not selected';
+    form.querySelector('#summary-condition').textContent = condition || 'Not selected';
     addOnSummary.textContent = selectedAddOns.length
       ? selectedAddOns.map((addOn) => addOnPrice(addOn, size) != null ? `${addOn} (+${formatPrice(addOnPrice(addOn, size))})` : `${addOn} (quoted separately)`).join(', ')
       : 'None selected';
 
     if (isCustom) {
       total.textContent = 'Custom quote';
+      breakdown.textContent = 'Final price confirmed after vehicle review.';
       form.querySelector('#summary-base').textContent = 'Custom';
       form.querySelector('#summary-condition-price').textContent = 'Reviewed after inspection';
       baseField.value = 'Custom quote required';
@@ -88,6 +90,7 @@
     const estimate = amount + (adjustment || 0) + addOnTotal;
     const price = formatPrice(estimate);
     total.textContent = price;
+    breakdown.textContent = `Base ${basePrice} + condition ${conditionPrice} + add-ons ${formatPrice(addOnTotal)} = ${price}`;
     form.querySelector('#summary-base').textContent = basePrice;
     form.querySelector('#summary-condition-price').textContent = adjustment > 0 ? `+${conditionPrice}` : 'Included';
     baseField.value = basePrice;
