@@ -633,10 +633,11 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 
 /* Mobile hero: let the headline, photo and actions breathe instead of forcing them into one short viewport. */
 @media (max-width: 680px) {
-  .hero { height: max(100svh, 760px); min-height: 760px; }
+  .hero { height: auto; min-height: 0; }
+  .hero-image, .hero-shade { inset: 76px 0 0; height: auto; }
   .hero-image { object-position: 58% 42%; }
   .hero-shade { background: linear-gradient(180deg, rgba(5, 5, 5, 0.22) 0%, rgba(5, 5, 5, 0.58) 43%, rgba(5, 5, 5, 0.96) 100%); }
-  .hero .hero-content { padding-top: 7.5rem; padding-bottom: 2rem; }
+  .hero .hero-content { box-sizing: border-box; min-height: 100svh; padding-top: 7.5rem; padding-bottom: 2rem; }
   .hero .eyebrow { margin-bottom: 1.25rem; font-size: 0.64rem; line-height: 1.5; }
   .hero h1 { font-size: clamp(3.65rem, 16vw, 5.25rem); line-height: 0.88; }
   .hero-foot { gap: 0; margin-top: 1.65rem; }
