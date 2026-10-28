@@ -587,6 +587,7 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 
 /* Homepage-only accent touches (scoped to body.home so other pages stay black and white) */
 .home { --accent-text: #ff5a64; }
+.home { background: #050505; }
 .home ::selection { background: var(--accent); color: #fff; }
 
 /* small accent bar on section labels, same motif as the hero */
@@ -637,7 +638,7 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
   .hero-image, .hero-shade { inset: 76px 0 0; height: auto; }
   .hero-image { object-position: 58% 42%; }
   .hero-shade { background: linear-gradient(180deg, rgba(5, 5, 5, 0.22) 0%, rgba(5, 5, 5, 0.58) 43%, rgba(5, 5, 5, 0.96) 100%); }
-  .hero .hero-content { box-sizing: border-box; min-height: 100svh; padding-top: 7.5rem; padding-bottom: 2rem; }
+  .hero .hero-content { box-sizing: border-box; min-height: 100vh; min-height: 100dvh; padding-top: 7.5rem; padding-bottom: max(2rem, env(safe-area-inset-bottom)); }
   .hero .eyebrow { margin-bottom: 1.25rem; font-size: 0.64rem; line-height: 1.5; }
   .hero h1 { font-size: clamp(3.65rem, 16vw, 5.25rem); line-height: 0.88; }
   .hero-foot { gap: 0; margin-top: 1.65rem; }
