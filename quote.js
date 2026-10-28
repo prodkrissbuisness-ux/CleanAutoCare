@@ -134,17 +134,33 @@
       go(1);
     }
   });
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
     const digits = form.elements.phone.value.replace(/\D/g, '');
     if (!(digits.length === 10 || (digits.length === 11 && digits[0] === '1'))) {
-      event.preventDefault();
       err.textContent = 'Please enter a 10-digit phone number we can reach you at.';
       form.elements.phone.focus();
       return;
     }
     updateEstimate();
     form.querySelector('#addons-joined').value = [...form.querySelectorAll('input[name="addon_options"]:checked')].map((checkbox) => checkbox.value).join(', ') || 'None';
-    form.querySelector('.q-submit').disabled = true;
+    const submit = form.querySelector('.q-submit');
+    submit.disabled = true;
+    err.textContent = 'Sending your request…';
+
+    try {
+      const endpoint = form.action.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
+      });
+      if (!response.ok) throw new Error(`FormSubmit returned ${response.status}`);
+      window.location.assign(form.querySelector('[name="_next"]').value);
+    } catch (error) {
+      submit.disabled = false;
+      err.textContent = 'We could not send your request. Please try again, or call or text 608-448-7757.';
+    }
   });
   show(0, false);
 })();
