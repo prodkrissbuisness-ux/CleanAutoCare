@@ -639,7 +639,7 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
   .hero-image, .hero-shade { inset: 76px 0 0; height: calc(100% - 76px); }
   .hero-image { object-fit: cover; object-position: 58% 42%; transform: scale(1.1); }
   .hero-shade { background: linear-gradient(180deg, rgba(5, 5, 5, 0.22) 0%, rgba(5, 5, 5, 0.54) 43%, rgba(5, 5, 5, 0.84) 100%); }
-  .hero .hero-content { box-sizing: border-box; min-height: 100vh; min-height: 100dvh; padding-top: 7.5rem; padding-bottom: max(2rem, env(safe-area-inset-bottom)); }
+  .hero .hero-content { box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; min-height: 100vh; min-height: 100dvh; padding-top: 7.5rem; padding-bottom: max(2rem, env(safe-area-inset-bottom)); }
   .hero .eyebrow { margin-bottom: 1.25rem; font-size: 0.64rem; line-height: 1.5; }
   .hero h1 { font-size: clamp(3.65rem, 16vw, 5.25rem); line-height: 0.88; }
   .hero-foot { gap: 0; margin-top: 1.65rem; }
