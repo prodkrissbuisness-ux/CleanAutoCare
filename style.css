@@ -635,6 +635,7 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 /* Mobile hero: let the headline, photo and actions breathe instead of forcing them into one short viewport. */
 @media (max-width: 680px) {
   .hero { height: auto; min-height: 0; }
+  .hero .eyebrow { display: none; }
   .hero-image, .hero-shade { inset: 76px 0 0; height: auto; }
   .hero-image { object-position: 58% 42%; }
   .hero-shade { background: linear-gradient(180deg, rgba(5, 5, 5, 0.22) 0%, rgba(5, 5, 5, 0.58) 43%, rgba(5, 5, 5, 0.96) 100%); }
