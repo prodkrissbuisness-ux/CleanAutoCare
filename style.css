@@ -562,8 +562,8 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
   .hero .brand-strip-list a { font-size: 0.9rem; white-space: normal; }
 }
 
-/* Hero background: slow crossfade through finished-work photos (8 slides x 5s = 40s loop) */
-.hero-slide { opacity: 0; animation: hero-fade 40s linear infinite; }
+/* Hero background: slow crossfade through finished-work photos (7 slides x 5s = 35s loop) */
+.hero-slide { opacity: 0; animation: hero-fade 35s linear infinite; }
 .hero-slide:nth-of-type(1) { animation-delay: -1.2s; }
 .hero-slide:nth-of-type(2) { animation-delay: 3.8s; }
 .hero-slide:nth-of-type(3) { animation-delay: 8.8s; }
@@ -571,18 +571,18 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .hero-slide:nth-of-type(5) { animation-delay: 18.8s; }
 .hero-slide:nth-of-type(6) { animation-delay: 23.8s; }
 .hero-slide:nth-of-type(7) { animation-delay: 28.8s; }
-.hero-slide:nth-of-type(8) { animation-delay: 33.8s; }
 @keyframes hero-fade {
   0% { opacity: 0; }
-  3.00% { opacity: 1; }
-  12.50% { opacity: 1; }
-  15.50% { opacity: 0; }
+  3.43% { opacity: 1; }
+  14.29% { opacity: 1; }
+  17.71% { opacity: 0; }
   100% { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-slide { animation: none !important; }
   .hero-slide:nth-of-type(1) { opacity: 1; }
 }
+
 
 /* Homepage-only accent touches (scoped to body.home so other pages stay black and white) */
 .home { --accent-text: #ff5a64; }
