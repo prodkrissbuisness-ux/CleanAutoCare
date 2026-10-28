@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Form test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 560px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    label { display: block; margin-top: 0.8rem; font-weight: 600; }
+    input[type="text"], input[type="tel"] { width: 100%; padding: 0.5rem; }
+    .opts label { display: inline-block; margin-right: 1rem; font-weight: 400; }
+    button { margin-top: 1.2rem; padding: 0.7rem 1.2rem; font-size: 1rem; }
+    pre { margin-top: 1.5rem; padding: 1rem; background: #f2f2f2; white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <h1>Form test</h1>
+  <p>Fill this in and send it. The result from FormSubmit shows below the button.</p>
+  <form id="t" action="https://formsubmit.co/ajax/cblunsford03@gmail.com" method="post">
+    <input type="hidden" name="_subject" value="TEST from form-test page">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
+    <label for="n">Name</label><input id="n" type="text" name="name" required>
+    <label for="p">Phone</label><input id="p" type="tel" name="phone" required>
+    <label>Vehicle size</label>
+    <div class="opts">
+      <label><input type="radio" name="size" value="Sedan" checked> Sedan</label>
+      <label><input type="radio" name="size" value="SUV"> SUV</label>
+      <label><input type="radio" name="size" value="Truck"> Truck</label>
+    </div>
+    <label><input type="checkbox" name="addon_options" value="Pet hair removal"> Pet hair removal</label>
+    <button type="submit">Send test</button>
+  </form>
+  <pre id="out">Waiting…</pre>
+  <script>
+    const f = document.getElementById('t'), out = document.getElementById('out');
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      out.textContent = 'Sending…';
+      try {
+        const r = await fetch(f.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(f) });
+        const t = await r.text();
+        out.textContent = 'HTTP ' + r.status + '\n\n' + t;
+      } catch (err) {
+        out.textContent = 'Request failed: ' + err;
+      }
+    });
+  </script>
+</body>
+</html>
