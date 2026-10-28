@@ -608,3 +608,24 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .home .faq-list summary::after { color: var(--accent); }
 .home .contact-section .button-primary { color: #fff; background: var(--accent); }
 .home .contact-section .button-primary:hover, .home .contact-section .button-primary:focus-visible { color: #fff; background: #a8161f; }
+
+/* Products strip: centered instead of pushed to the edges */
+.hero .trust-bar { justify-content: center; gap: 2.2rem; }
+.hero .brand-strip-label { padding-right: 2.2rem; border-right: 1px solid var(--line-dark); }
+.hero .brand-strip-list { flex: 0 1 auto; justify-content: center; }
+.hero .brand-strip-list li:last-child { padding-right: 1.7rem; }
+@media (max-width: 900px) {
+  .hero .trust-bar { gap: 1.2rem; }
+  .hero .brand-strip-label { padding-right: 1.2rem; }
+  .hero .brand-strip-list li { padding: 0.2rem 1rem; }
+  .hero .brand-strip-list li:last-child { padding-right: 1rem; }
+  .hero .brand-strip-list a { font-size: 1.1rem; }
+}
+@media (max-width: 680px) {
+  .hero .trust-bar { flex-direction: column; align-items: stretch; justify-content: center; gap: 0.6rem; text-align: center; }
+  .hero .brand-strip-label { padding-right: 0; border-right: 0; }
+  .hero .brand-strip-list { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .hero .brand-strip-list li, .hero .brand-strip-list li:last-child { padding: 0.2rem 0.6rem; }
+  .hero .brand-strip-list li:first-child { padding-left: 0.6rem; }
+  .hero .brand-strip-list a { font-size: 0.9rem; }
+}
