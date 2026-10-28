@@ -1,0 +1,144 @@
+(() => {
+  const form = document.getElementById('quote-form');
+  if (!form) return;
+
+  // Edit these amounts whenever your basic-detail pricing changes.
+  const PRICES = {
+    'Coupe or compact': { 'Interior detail': 100, 'Exterior detail': 75, 'Full detail': 150 },
+    Sedan: { 'Interior detail': 125, 'Exterior detail': 100, 'Full detail': 175 },
+    SUV: { 'Interior detail': 150, 'Exterior detail': 100, 'Full detail': 200 },
+    'Truck - small cab': { 'Interior detail': 125, 'Exterior detail': 120, 'Full detail': 230 },
+    'Truck - crew cab': { 'Interior detail': 150, 'Exterior detail': 120, 'Full detail': 230 },
+  };
+  const CONDITION_ADJUSTMENTS = {
+    Light: { 'Coupe or compact': 0, Sedan: 0, SUV: 0, 'Truck - small cab': 0, 'Truck - crew cab': 0 },
+    Moderate: { 'Coupe or compact': 25, Sedan: 25, SUV: 50, 'Truck - small cab': 50, 'Truck - crew cab': 50 },
+    Heavy: { 'Coupe or compact': 50, Sedan: 75, SUV: 100, 'Truck - small cab': 75, 'Truck - crew cab': 100 },
+    'Very dirty / pet hair / stains': { 'Coupe or compact': 75, Sedan: 100, SUV: 150, 'Truck - small cab': 125, 'Truck - crew cab': 150 },
+  };
+
+  form.classList.add('is-wizard');
+  const steps = [...form.querySelectorAll('.q-step')];
+  const bar = form.querySelector('.q-progress i');
+  const count = form.querySelector('.q-count');
+  const err = form.querySelector('.q-error');
+  const back = form.querySelector('[data-back]');
+  const next = form.querySelector('[data-next]');
+  const total = form.querySelector('#quote-total');
+  const disclaimer = form.querySelector('#quote-disclaimer');
+  const subject = form.querySelector('#quote-subject');
+  const baseField = form.querySelector('#base-price');
+  const adjustmentField = form.querySelector('#condition-adjustment');
+  const estimateField = form.querySelector('#total-estimate');
+  let i = 0;
+
+  const PKG = { interior: 'Interior detail', exterior: 'Exterior detail', full: 'Full detail', deep: 'Deep-clean detail' };
+  const preselected = PKG[new URLSearchParams(location.search).get('package')];
+  if (preselected) {
+    const radio = form.querySelector(`input[name="service"][value="${preselected}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  const selected = (name) => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
+  const formatPrice = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
+
+  function updateEstimate() {
+    const size = selected('size');
+    const service = selected('service');
+    const condition = selected('condition');
+    const amount = PRICES[size]?.[service];
+    const adjustment = CONDITION_ADJUSTMENTS[condition]?.[size];
+    const isCustom = service === 'Deep-clean detail' || amount == null;
+    form.querySelector('#summary-size').textContent = size || 'Not selected';
+    form.querySelector('#summary-service').textContent = service || 'Not selected';
+    form.querySelector('#summary-condition').textContent = selected('condition') || 'Not selected';
+
+    if (isCustom) {
+      total.textContent = 'Custom quote';
+      form.querySelector('#summary-base').textContent = 'Custom';
+      form.querySelector('#summary-condition-price').textContent = 'Reviewed after inspection';
+      baseField.value = 'Custom quote required';
+      adjustmentField.value = 'Reviewed after inspection';
+      estimateField.value = 'Custom quote required';
+      subject.value = 'New accepted Clean Auto Care custom quote request';
+      disclaimer.textContent = 'Deep-clean work is quoted after we review the vehicle condition, photos and requested work. No deposit or payment is collected online.';
+      return;
+    }
+
+    const basePrice = formatPrice(amount);
+    const conditionPrice = formatPrice(adjustment || 0);
+    const estimate = amount + (adjustment || 0);
+    const price = formatPrice(estimate);
+    total.textContent = price;
+    form.querySelector('#summary-base').textContent = basePrice;
+    form.querySelector('#summary-condition-price').textContent = adjustment > 0 ? `+${conditionPrice}` : 'Included';
+    baseField.value = basePrice;
+    adjustmentField.value = adjustment > 0 ? `+${conditionPrice}` : '$0';
+    estimateField.value = `${price} estimated total`;
+    subject.value = `Accepted Clean Auto Care estimate: ${price} — ${size}`;
+    disclaimer.textContent = 'This estimate includes the selected condition adjustment. Pet hair, stains, add-ons, travel, or an in-person inspection may require an updated estimate. No deposit or payment is collected online.';
+  }
+
+  function show(n, scroll) {
+    i = n;
+    steps.forEach((step, index) => { step.hidden = index !== n; });
+    bar.style.width = `${((n + 1) / steps.length) * 100}%`;
+    count.textContent = '';
+    err.textContent = '';
+    back.style.visibility = n === 0 ? 'hidden' : 'visible';
+    next.style.display = n === steps.length - 1 ? 'none' : '';
+    if (n === steps.length - 1) updateEstimate();
+    if (scroll) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function validStep() {
+    const step = steps[i];
+    if (step.dataset.require === 'choice' && !step.querySelector('input:checked')) {
+      err.textContent = 'Please choose an option to continue.';
+      return false;
+    }
+    const invalid = [...step.querySelectorAll('[required]')].find((field) => !field.checkValidity());
+    if (invalid) {
+      err.textContent = 'Please complete the required fields before continuing.';
+      invalid.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function go(direction) {
+    if (direction > 0 && !validStep()) return;
+    show(Math.min(Math.max(i + direction, 0), steps.length - 1), true);
+  }
+
+  form.addEventListener('click', (event) => {
+    if (event.target.closest('[data-next]')) go(1);
+    else if (event.target.closest('[data-back]')) go(-1);
+  });
+  form.addEventListener('change', (event) => {
+    if (!event.target.matches('input[type="radio"]')) return;
+    updateEstimate();
+    if (steps[i]?.dataset.auto !== undefined) {
+      window.setTimeout(() => go(1), 180);
+    }
+  });
+  form.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && event.target.tagName === 'INPUT' && event.target.type !== 'submit' && i < steps.length - 1) {
+      event.preventDefault();
+      go(1);
+    }
+  });
+  form.addEventListener('submit', (event) => {
+    const digits = form.elements.phone.value.replace(/\D/g, '');
+    if (!(digits.length === 10 || (digits.length === 11 && digits[0] === '1'))) {
+      event.preventDefault();
+      err.textContent = 'Please enter a 10-digit phone number we can reach you at.';
+      form.elements.phone.focus();
+      return;
+    }
+    updateEstimate();
+    form.querySelector('#addons-joined').value = [...form.querySelectorAll('input[name="addon_options"]:checked')].map((checkbox) => checkbox.value).join(', ') || 'None';
+    form.querySelector('.q-submit').disabled = true;
+  });
+  show(0, false);
+})();
