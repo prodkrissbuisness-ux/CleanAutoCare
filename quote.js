@@ -64,7 +64,7 @@
     form.querySelector('#summary-service').textContent = service || 'Not selected';
     form.querySelector('#summary-condition').textContent = selected('condition') || 'Not selected';
     addOnSummary.textContent = selectedAddOns.length
-      ? selectedAddOns.map((addOn) => ADDON_MINIMUMS[addOn] != null ? `${addOn} (+${formatPrice(ADDON_MINIMUMS[addOn])} minimum)` : `${addOn} (quoted separately)`).join(', ')
+      ? selectedAddOns.map((addOn) => ADDON_MINIMUMS[addOn] != null ? `${addOn} (+${formatPrice(ADDON_MINIMUMS[addOn])})` : `${addOn} (quoted separately)`).join(', ')
       : 'None selected';
 
     if (isCustom) {
@@ -88,11 +88,11 @@
     form.querySelector('#summary-condition-price').textContent = adjustment > 0 ? `+${conditionPrice}` : 'Included';
     baseField.value = basePrice;
     adjustmentField.value = adjustment > 0 ? `+${conditionPrice}` : '$0';
-    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnMinimum)} in selected add-on minimums)`;
+    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnMinimum)} for selected add-ons)`;
     subject.value = `Accepted Clean Auto Care estimate: ${price} — ${size}`;
     disclaimer.textContent = separatelyQuotedAddOns.length
-      ? `This estimate includes ${formatPrice(addOnMinimum)} in selected add-on minimums. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review. Travel or an in-person inspection may also require an updated estimate. No deposit or payment is collected online.`
-      : `This estimate includes ${formatPrice(addOnMinimum)} in selected add-on minimums. Travel or an in-person inspection may require an updated estimate. No deposit or payment is collected online.`;
+      ? `This estimate includes ${formatPrice(addOnMinimum)} for selected add-ons. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review. Travel or an in-person inspection may also require an updated estimate. No deposit or payment is collected online.`
+      : `This estimate includes ${formatPrice(addOnMinimum)} for selected add-ons. Travel or an in-person inspection may require an updated estimate. No deposit or payment is collected online.`;
   }
 
   function show(n, scroll) {
