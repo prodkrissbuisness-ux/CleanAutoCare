@@ -564,24 +564,20 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 }
 
 /* Hero background: slow crossfade through finished-work photos (7 slides x 5s = 35s loop) */
-.hero-slide { opacity: 0; animation: hero-fade 35s linear infinite; }
-.hero-slide:nth-of-type(1) { animation-delay: -1.2s; }
-.hero-slide:nth-of-type(2) { animation-delay: 3.8s; }
-.hero-slide:nth-of-type(3) { animation-delay: 8.8s; }
-.hero-slide:nth-of-type(4) { animation-delay: 13.8s; }
-.hero-slide:nth-of-type(5) { animation-delay: 18.8s; }
-.hero-slide:nth-of-type(6) { animation-delay: 23.8s; }
-.hero-slide:nth-of-type(7) { animation-delay: 28.8s; }
+.hero.has-slideshow .hero-slide { opacity: 0; animation: hero-fade 15s linear infinite; }
+.hero.has-slideshow .hero-slide:nth-of-type(1) { animation-delay: -0.5s; }
+.hero.has-slideshow .hero-slide:nth-of-type(2) { animation-delay: 4.5s; }
+.hero.has-slideshow .hero-slide:nth-of-type(3) { animation-delay: 9.5s; }
 @keyframes hero-fade {
   0% { opacity: 0; }
-  3.43% { opacity: 1; }
-  14.29% { opacity: 1; }
-  17.71% { opacity: 0; }
+  6.67% { opacity: 1; }
+  26.67% { opacity: 1; }
+  33.33% { opacity: 0; }
   100% { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide { animation: none !important; }
-  .hero-slide:nth-of-type(1) { opacity: 1; }
+  .hero.has-slideshow .hero-slide { animation: none !important; opacity: 0; }
+  .hero.has-slideshow .hero-slide:nth-of-type(1) { opacity: 1; }
 }
 
 
