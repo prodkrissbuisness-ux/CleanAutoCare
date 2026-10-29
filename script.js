@@ -20,7 +20,7 @@ const hero = document.querySelector('.hero');
 if (hero) {
   // The first hero image is immediately available. Load just two compressed follow-up images after it paints.
   const heroSlides = ['/images/hero4-mobile.webp', '/images/truckbsB-mobile.webp'];
-  window.addEventListener('load', () => {
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) window.addEventListener('load', () => {
     window.setTimeout(() => {
       let loaded = 0;
       heroSlides.forEach((src) => {
@@ -30,7 +30,17 @@ if (hero) {
         image.decoding = 'async';
         image.onload = () => {
           loaded += 1;
-          if (loaded === heroSlides.length) hero.classList.add('has-slideshow');
+          if (loaded === heroSlides.length) {
+            const slides = [...hero.querySelectorAll('.hero-slide')];
+            let active = 0;
+            hero.classList.add('has-slideshow');
+            slides[active].classList.add('is-active');
+            window.setInterval(() => {
+              slides[active].classList.remove('is-active');
+              active = (active + 1) % slides.length;
+              slides[active].classList.add('is-active');
+            }, 5000);
+          }
         };
         image.src = src;
         hero.insertBefore(image, hero.querySelector('.hero-shade'));

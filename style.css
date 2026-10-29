@@ -564,21 +564,8 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 }
 
 /* Hero background: slow crossfade through finished-work photos (7 slides x 5s = 35s loop) */
-.hero.has-slideshow .hero-slide { opacity: 0; animation: hero-fade 15s linear infinite; }
-.hero.has-slideshow .hero-slide:nth-of-type(1) { animation-delay: -0.5s; }
-.hero.has-slideshow .hero-slide:nth-of-type(2) { animation-delay: 4.5s; }
-.hero.has-slideshow .hero-slide:nth-of-type(3) { animation-delay: 9.5s; }
-@keyframes hero-fade {
-  0% { opacity: 0; }
-  6.67% { opacity: 1; }
-  26.67% { opacity: 1; }
-  33.33% { opacity: 0; }
-  100% { opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero.has-slideshow .hero-slide { animation: none !important; opacity: 0; }
-  .hero.has-slideshow .hero-slide:nth-of-type(1) { opacity: 1; }
-}
+.hero.has-slideshow .hero-slide { opacity: 0; transition: opacity 700ms ease; }
+.hero.has-slideshow .hero-slide.is-active { opacity: 1; }
 
 
 /* Homepage-only accent touches (scoped to body.home so other pages stay black and white) */
