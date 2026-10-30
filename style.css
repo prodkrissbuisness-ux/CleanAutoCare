@@ -737,6 +737,13 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .pricing-note { margin: 0 0 2.5rem; color: var(--on-dark-muted); font-size: 1rem; }
 .pricing-note a { color: var(--paper); text-underline-offset: 3px; }
 
+/* Privacy policy: one readable column */
+.legal-grid { grid-template-columns: minmax(0, 760px); }
+.legal-prose { max-width: 760px; padding-top: 0; font-size: 1.05rem; }
+.legal-prose p + p { margin-top: 0; }
+.legal-prose li + li { margin-top: 0.4rem; }
+.footer-bottom a { color: inherit; text-underline-offset: 3px; }
+
 /* Results gallery on phones: each photo full width at its own 3:4 shape, stacked with space between. */
 @media (max-width: 680px) {
   .gallery-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 1.25rem; }
