@@ -737,6 +737,10 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .pricing-note { margin: 0 0 2.5rem; color: var(--on-dark-muted); font-size: 1rem; }
 .pricing-note a { color: var(--paper); text-underline-offset: 3px; }
 
+/* New customer offer line under the quote page intro */
+.quote-offer { margin: -1rem auto 0; color: var(--paper); font-size: 1rem; font-weight: 600; }
+.quote-offer::before { content: ""; display: inline-block; width: 1.4rem; height: 2px; margin: 0 0.6rem 0.25rem 0; vertical-align: middle; background: var(--accent); }
+
 /* New customer offer checkbox on the quote form */
 .quote-page .quote-wizard .new-customer-check { margin-top: 1.6rem; padding: 1rem 1.1rem; color: var(--on-dark); font-size: 1rem; border: 1px solid rgba(255, 255, 255, 0.24); }
 .quote-page .quote-wizard .new-customer-check strong { color: var(--paper); }
