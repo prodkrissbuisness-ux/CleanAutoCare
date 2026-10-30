@@ -727,6 +727,7 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .quote-page .quote-wizard input[type="text"], .quote-page .quote-wizard input[type="tel"], .quote-page .quote-wizard input[type="email"], .quote-page .quote-wizard input[type="file"], .quote-page .quote-wizard textarea { padding: 1rem 1.1rem; font-size: 1.05rem; }
 .quote-page .q-nav .button, .quote-page .q-submit { min-height: 62px; padding: 1rem 2.4rem; font-size: 1.1rem; }
 .quote-page .q-nav [data-next] { flex: 1; }
+.quote-summary > div:nth-child(3n+1) { padding-left: 0; }
 @media (max-width: 560px) {
   .quote-page .q-opt span { min-height: 76px; }
 }
