@@ -18,33 +18,40 @@ if (menuButton && navigation) {
 const hero = document.querySelector('.hero');
 
 if (hero) {
-  // The first hero image is immediately available. Load just two compressed follow-up images after it paints.
-  const heroSlides = ['/images/hero4-mobile.webp', '/images/truckbsB-mobile.webp'];
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) window.addEventListener('load', () => {
-    window.setTimeout(() => {
-      let loaded = 0;
-      heroSlides.forEach((src) => {
-        const image = new Image();
-        image.className = 'hero-image hero-slide';
-        image.alt = '';
-        image.decoding = 'async';
-        image.onload = () => {
-          loaded += 1;
-          if (loaded === heroSlides.length) {
-            const slides = [...hero.querySelectorAll('.hero-slide')];
-            let active = 0;
-            hero.classList.add('has-slideshow');
-            slides[active].classList.add('is-active');
-            window.setInterval(() => {
-              slides[active].classList.remove('is-active');
-              active = (active + 1) % slides.length;
-              slides[active].classList.add('is-active');
-            }, 5000);
-          }
-        };
-        image.src = src;
+  // The first hero image is in the HTML. Each follow-up slide is fetched one at a time, only
+  // after the page has loaded, and only joins the rotation once it is fully decoded.
+  const heroSlides = ['/images/hero1-slide.webp', '/images/truckextB-slide.webp', '/images/hero6-slide.webp', '/images/truckbsB-slide.webp', '/images/truckfrtB-slide.webp'];
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (!saveData && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) window.addEventListener('load', () => {
+    const slides = [hero.querySelector('.hero-slide')];
+    let active = 0;
+    let next = 0;
+    let loading = false;
+
+    const loadNext = () => {
+      if (loading || next >= heroSlides.length) return;
+      loading = true;
+      const image = new Image();
+      image.className = 'hero-image hero-slide';
+      image.alt = '';
+      image.src = heroSlides[next];
+      next += 1;
+      image.decode().then(() => {
         hero.insertBefore(image, hero.querySelector('.hero-shade'));
-      });
-    }, 250);
+        slides.push(image);
+      }).catch(() => {}).finally(() => { loading = false; });
+    };
+
+    hero.classList.add('has-slideshow');
+    slides[0].classList.add('is-active');
+    window.setTimeout(loadNext, 250);
+    window.setInterval(() => {
+      if (slides.length > 1) {
+        slides[active].classList.remove('is-active');
+        active = (active + 1) % slides.length;
+        slides[active].classList.add('is-active');
+      }
+      loadNext();
+    }, 5000);
   }, { once: true });
 }
