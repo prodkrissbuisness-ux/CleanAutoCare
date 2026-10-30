@@ -737,6 +737,11 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .pricing-note { margin: 0 0 2.5rem; color: var(--on-dark-muted); font-size: 1rem; }
 .pricing-note a { color: var(--paper); text-underline-offset: 3px; }
 
+/* New customer offer checkbox on the quote form */
+.quote-page .quote-wizard .new-customer-check { margin-top: 1.6rem; padding: 1rem 1.1rem; color: var(--on-dark); font-size: 1rem; border: 1px solid rgba(255, 255, 255, 0.24); }
+.quote-page .quote-wizard .new-customer-check strong { color: var(--paper); }
+.quote-page .quote-wizard .new-customer-check input { width: 1.15rem; height: 1.15rem; margin-top: 0.2rem; }
+
 /* Privacy policy: one readable column */
 .legal-grid { grid-template-columns: minmax(0, 760px); }
 .legal-prose { max-width: 760px; padding-top: 0; font-size: 1.05rem; }

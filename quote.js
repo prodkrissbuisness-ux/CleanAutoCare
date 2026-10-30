@@ -23,6 +23,8 @@
     'Headlight restoration': 50,
     'Ceramic paint protection (6 weeks)': { 'Coupe or compact': 150, Sedan: 150, SUV: 300, 'Truck - small cab': 300, 'Truck - crew cab': 300 },
   };
+  // Taken off the estimate when the customer checks "first detail" on the contact step.
+  const NEW_CUSTOMER_DISCOUNT = 20;
 
   form.classList.add('is-wizard');
   const steps = [...form.querySelectorAll('.q-step')];
@@ -39,6 +41,8 @@
   const estimateField = form.querySelector('#total-estimate');
   const addOnSummary = form.querySelector('#summary-addons');
   const breakdown = form.querySelector('#quote-breakdown');
+  const newCustomer = form.querySelector('#new-customer');
+  const discountField = form.querySelector('#new-customer-discount');
   let i = 0;
 
   const PKG = { interior: 'Interior detail', exterior: 'Exterior detail', full: 'Full detail', deep: 'Deep-clean detail' };
@@ -65,6 +69,9 @@
     const addOnTotal = selectedAddOns.reduce((sum, addOn) => sum + (addOnPrice(addOn, size) || 0), 0);
     const separatelyQuotedAddOns = selectedAddOns.filter((addOn) => addOnPrice(addOn, size) == null);
     const isCustom = service === 'Deep-clean detail' || amount == null;
+    const discount = newCustomer?.checked ? NEW_CUSTOMER_DISCOUNT : 0;
+    const discountNote = discount ? ` Your ${formatPrice(discount)} new customer discount comes off the final price.` : '';
+    discountField.value = discount ? `-${formatPrice(discount)} first detail` : 'None';
     form.querySelector('#summary-size').textContent = size || 'Not selected';
     form.querySelector('#summary-service').textContent = service || 'Not selected';
     form.querySelector('#summary-condition').textContent = condition || 'Not selected';
@@ -81,21 +88,21 @@
       adjustmentField.value = 'Reviewed after inspection';
       estimateField.value = 'Custom quote required';
       subject.value = 'New accepted Clean Auto Care custom quote request';
-      disclaimer.textContent = 'Deep-clean work is quoted after we review the vehicle condition, photos and requested work. No deposit or payment is collected online.';
+      disclaimer.textContent = `Deep-clean work is quoted after we review the vehicle condition, photos and requested work.${discountNote} No deposit or payment is collected online.`;
       return;
     }
 
     const basePrice = formatPrice(amount);
     const conditionPrice = formatPrice(adjustment || 0);
-    const estimate = amount + (adjustment || 0) + addOnTotal;
+    const estimate = amount + (adjustment || 0) + addOnTotal - discount;
     const price = formatPrice(estimate);
     total.textContent = price;
-    breakdown.textContent = `Base ${basePrice} + condition ${conditionPrice} + add-ons ${formatPrice(addOnTotal)} = ${price}`;
+    breakdown.textContent = `Base ${basePrice} + condition ${conditionPrice} + add-ons ${formatPrice(addOnTotal)}${discount ? ` − ${formatPrice(discount)} new customer` : ''} = ${price}`;
     form.querySelector('#summary-base').textContent = basePrice;
     form.querySelector('#summary-condition-price').textContent = adjustment > 0 ? `+${conditionPrice}` : 'Included';
     baseField.value = basePrice;
     adjustmentField.value = adjustment > 0 ? `+${conditionPrice}` : '$0';
-    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnTotal)} for selected add-ons)`;
+    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnTotal)} for selected add-ons${discount ? `, minus ${formatPrice(discount)} new customer discount` : ''})`;
     subject.value = `Accepted Clean Auto Care estimate: ${price} — ${size}`;
     disclaimer.textContent = separatelyQuotedAddOns.length
       ? `This estimate includes ${formatPrice(addOnTotal)} for selected add-ons. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review. Travel or an in-person inspection may also require an updated estimate. No deposit or payment is collected online.`
