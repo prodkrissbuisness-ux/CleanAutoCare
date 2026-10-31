@@ -737,6 +737,12 @@ h1, h2 { font-weight: 600; letter-spacing: -0.035em; text-transform: uppercase; 
 .pricing-note { margin: 0 0 2.5rem; color: var(--on-dark-muted); font-size: 1rem; }
 .pricing-note a { color: var(--paper); text-underline-offset: 3px; }
 
+/* Add-ons that are listed but not offered right now */
+.addon-grid > .addon-unavailable { opacity: 0.55; }
+.quote-page .q-unavailable { opacity: 0.45; }
+.quote-page .q-unavailable input { cursor: not-allowed; }
+.quote-page .q-unavailable:hover span { border-color: rgba(255, 255, 255, 0.24); background: rgba(255, 255, 255, 0.04); }
+
 /* New customer offer line under the quote page intro */
 .quote-offer { margin: -1rem auto 0; color: var(--paper); font-size: 1rem; font-weight: 600; }
 .quote-offer::before { content: ""; display: inline-block; width: 1.4rem; height: 2px; margin: 0 0.6rem 0.25rem 0; vertical-align: middle; background: var(--accent); }

@@ -21,7 +21,7 @@
     'Pet hair removal': { 'Coupe or compact': 30, Sedan: 30, SUV: 60, 'Truck - small cab': 60, 'Truck - crew cab': 60 },
     'Heavy stain treatment': { 'Coupe or compact': 60, Sedan: 60, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 100 },
     'Headlight restoration': 50,
-    'Ceramic paint protection (6 weeks)': { 'Coupe or compact': 150, Sedan: 150, SUV: 300, 'Truck - small cab': 300, 'Truck - crew cab': 300 },
+    'Paint protection (spray wax)': { 'Coupe or compact': 50, Sedan: 50, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 150 },
   };
   // Taken off the estimate when the customer checks "first detail" on the contact step.
   const NEW_CUSTOMER_DISCOUNT = 20;
