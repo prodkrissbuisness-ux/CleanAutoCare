@@ -18,7 +18,7 @@
   };
   // Ranged add-ons scale with vehicle size. Add-ons not listed here are quoted after review.
   const ADDON_PRICES = {
-    'Pet hair removal': { 'Coupe or compact': 30, Sedan: 30, SUV: 60, 'Truck - small cab': 60, 'Truck - crew cab': 60 },
+    'Pet hair removal': { 'Coupe or compact': 50, Sedan: 50, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 100 },
     'Heavy stain treatment': { 'Coupe or compact': 60, Sedan: 60, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 100 },
     'Headlight restoration': 50,
   };
