@@ -108,6 +108,21 @@
       : `This estimate includes ${formatPrice(addOnTotal)} for selected add-ons. Travel or an in-person inspection may require an updated estimate. No deposit or payment is collected online.`;
   }
 
+  // Funnel tracking for the Meta Pixel and Google Analytics. Each milestone fires once per visit.
+  // No contact details are sent, only the vehicle, service, condition and the price shown.
+  const tracked = new Set();
+  function trackStep(n) {
+    const milestones = { 1: ['QuoteStarted', 'quote_start'], [steps.length - 2]: ['QuoteContactStep', 'quote_contact_step'], [steps.length - 1]: ['QuoteEstimateViewed', 'quote_estimate_view'] };
+    const milestone = milestones[n];
+    if (!milestone || tracked.has(n)) return;
+    tracked.add(n);
+    const params = { vehicle: selected('size'), service: selected('service'), condition: selected('condition') };
+    const value = parseInt(total.textContent.replace(/[^0-9]/g, ''), 10);
+    if (n === steps.length - 1 && value) Object.assign(params, { value, currency: 'USD' });
+    if (window.fbq) window.fbq('trackCustom', milestone[0], params);
+    if (window.gtag) window.gtag('event', milestone[1], params);
+  }
+
   function show(n, scroll) {
     i = n;
     steps.forEach((step, index) => { step.hidden = index !== n; });
@@ -117,6 +132,7 @@
     back.style.visibility = n === 0 ? 'hidden' : 'visible';
     next.style.display = n === steps.length - 1 ? 'none' : '';
     if (n === steps.length - 1) updateEstimate();
+    trackStep(n);
     if (scroll) {
       // Only scroll if the top of the form is hidden behind the header; otherwise leave the page alone.
       const header = document.querySelector('.site-header');
