@@ -31,11 +31,11 @@
   const vehicleLabel = (value) => value.replace(' - ', ', ');
   const priceFor = (service, size) => PRICES[service]?.[VEHICLES.indexOf(size)];
 
+  // The last step only recaps the choice; the price stays on the menu and the vehicle step.
   function summary() {
     const service = selected('service');
     const size = selected('size');
-    const price = priceFor(service, size);
-    return [serviceName(service), size && vehicleLabel(size), isWaitlist(service) ? 'waitlist' : price && `from $${price}`]
+    return [serviceName(service), size && vehicleLabel(size), isWaitlist(service) && 'waitlist']
       .filter(Boolean).join(' · ');
   }
 
@@ -47,7 +47,9 @@
     // Each vehicle shows its price for the chosen service.
     form.querySelectorAll('input[name="size"]').forEach((input) => {
       const price = priceFor(service, input.value);
-      input.closest('.b-option').querySelector('.b-item-price').textContent = price ? `$${price}` : (isWaitlist(service) ? '' : 'Quoted');
+      const cell = input.closest('.b-option').querySelector('.b-item-price');
+      if (price) cell.innerHTML = `<span class="b-from">Starting at </span>$${price}`;
+      else cell.textContent = isWaitlist(service) ? '' : 'Quoted';
     });
     form.querySelector('#vehicle-service').textContent = serviceName(service);
     form.querySelector('#contact-summary').textContent = summary();

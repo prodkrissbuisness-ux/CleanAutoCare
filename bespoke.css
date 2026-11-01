@@ -184,6 +184,7 @@ a.b-item:hover { background: var(--b-tint); }
 .b-option.is-picked .b-item-desc, .b-option:has(input:checked) .b-item-desc { color: #c9c7c0; }
 .b-option.is-picked .b-item-dots, .b-option:has(input:checked) .b-item-dots { border-color: #6b6b66; }
 .b-option.is-small .b-item-name { font-size: 23px; }
+.b-from { opacity: 0.6; }
 .b-option.is-small .b-item-price { font-size: 11.5px; letter-spacing: 0.08em; color: var(--b-muted); }
 .b-option.is-small.is-picked .b-item-price, .b-option.is-small:has(input:checked) .b-item-price { color: #c9c7c0; }
 .b-sub { display: flex; flex-direction: column; align-items: center; padding-top: 26px; border-top: 1px solid var(--b-line); }
@@ -243,6 +244,9 @@ a.b-item:hover { background: var(--b-tint); }
   .b-option .b-item-name { font-size: 22px; white-space: nowrap; }
   .b-option.is-small .b-item-name { font-size: 20px; }
   .b-option.is-small .b-item-price { font-size: 10.5px; letter-spacing: 0.04em; }
+  /* "Starting at" sits small above the amount so the vehicle names stay on one line. */
+  .b-option .b-item-price:has(.b-from) { text-align: right; line-height: 1.25; }
+  .b-from { display: block; font-size: 9px; letter-spacing: 0.08em; }
   .b-step-title { font-size: 38px; }
   .b-message { padding-top: calc(var(--b-header) + 64px); padding-bottom: 96px; }
   .b-faq summary { font-size: 22px; }
