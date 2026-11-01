@@ -14,14 +14,16 @@
     Light: { 'Coupe or compact': 0, Sedan: 0, SUV: 0, 'Truck - small cab': 0, 'Truck - crew cab': 0 },
     Moderate: { 'Coupe or compact': 25, Sedan: 25, SUV: 50, 'Truck - small cab': 50, 'Truck - crew cab': 50 },
     Heavy: { 'Coupe or compact': 50, Sedan: 75, SUV: 100, 'Truck - small cab': 75, 'Truck - crew cab': 100 },
-    'Very dirty / pet hair / stains': { 'Coupe or compact': 75, Sedan: 100, SUV: 150, 'Truck - small cab': 125, 'Truck - crew cab': 150 },
   };
-  // Ranged add-ons scale with vehicle size. Add-ons not listed here are quoted after review.
+  // Pet hair and stains are priced by how much there is. Add-ons not listed here are quoted after review.
   const ADDON_PRICES = {
-    'Pet hair removal': { 'Coupe or compact': 50, Sedan: 50, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 100 },
-    'Heavy stain treatment': { 'Coupe or compact': 60, Sedan: 60, SUV: 100, 'Truck - small cab': 100, 'Truck - crew cab': 100 },
+    'Pet hair removal: some': 50,
+    'Pet hair removal: a lot': 100,
+    'Stain treatment: a few spots': 60,
+    'Stain treatment: lots or large': 100,
     'Headlight restoration': 50,
   };
+  // Conditions not in CONDITION_ADJUSTMENTS (Full reset) are quoted after photos.
   // Taken off the estimate when the customer checks "first detail" on the contact step.
   const NEW_CUSTOMER_DISCOUNT = 20;
 
@@ -67,7 +69,7 @@
     const selectedAddOns = [...form.querySelectorAll('input[name="addon_options"]:checked')].map((checkbox) => checkbox.value);
     const addOnTotal = selectedAddOns.reduce((sum, addOn) => sum + (addOnPrice(addOn, size) || 0), 0);
     const separatelyQuotedAddOns = selectedAddOns.filter((addOn) => addOnPrice(addOn, size) == null);
-    const isCustom = service === 'Deep-clean detail' || amount == null;
+    const isCustom = service === 'Deep-clean detail' || amount == null || (condition && adjustment == null);
     const discount = newCustomer?.checked ? NEW_CUSTOMER_DISCOUNT : 0;
     const discountNote = discount ? ` Your ${formatPrice(discount)} new customer discount comes off the final price.` : '';
     discountField.value = discount ? `-${formatPrice(discount)} first detail` : 'None';
@@ -167,6 +169,11 @@
     else if (event.target.closest('[data-back]')) go(-1);
   });
   form.addEventListener('change', (event) => {
+    // Pet hair and stains each have two amounts; checking one unchecks the other.
+    const group = event.target.dataset.oneOf;
+    if (group && event.target.checked) {
+      form.querySelectorAll(`input[data-one-of="${group}"]`).forEach((box) => { if (box !== event.target) box.checked = false; });
+    }
     if (!event.target.matches('input[type="radio"]')) return;
     updateEstimate();
     if (steps[i]?.dataset.auto !== undefined) {
