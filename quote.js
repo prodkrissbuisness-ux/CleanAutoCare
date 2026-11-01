@@ -2,211 +2,136 @@
   const form = document.getElementById('quote-form');
   if (!form) return;
 
-  // Edit these amounts whenever your basic-detail pricing changes.
+  // Starting prices from the menu (light condition), by vehicle. They show next to each vehicle on
+  // step 2 and go in the request email as a baseline for the itemized quote. Keep them in line with
+  // the homepage menu and the Job Pricer.
+  const VEHICLES = ['Coupe or compact', 'Sedan', 'SUV', 'Truck - small cab', 'Truck - crew cab'];
   const PRICES = {
-    'Coupe or compact': { 'Interior detail': 100, 'Exterior detail': 75, 'Full detail': 150 },
-    Sedan: { 'Interior detail': 125, 'Exterior detail': 100, 'Full detail': 175 },
-    SUV: { 'Interior detail': 150, 'Exterior detail': 100, 'Full detail': 200 },
-    'Truck - small cab': { 'Interior detail': 125, 'Exterior detail': 120, 'Full detail': 230 },
-    'Truck - crew cab': { 'Interior detail': 150, 'Exterior detail': 120, 'Full detail': 230 },
+    'Exterior detail': [100, 125, 125, 150, 150],
+    'Interior detail': [150, 175, 200, 175, 200],
+    'Full detail': [225, 250, 275, 300, 300],
   };
-  const CONDITION_ADJUSTMENTS = {
-    Light: { 'Coupe or compact': 0, Sedan: 0, SUV: 0, 'Truck - small cab': 0, 'Truck - crew cab': 0 },
-    Moderate: { 'Coupe or compact': 25, Sedan: 25, SUV: 50, 'Truck - small cab': 50, 'Truck - crew cab': 50 },
-    Heavy: { 'Coupe or compact': 50, Sedan: 75, SUV: 100, 'Truck - small cab': 75, 'Truck - crew cab': 100 },
+  const NAMES = {
+    'Exterior detail': 'The Exterior', 'Interior detail': 'The Interior', 'Full detail': 'The Full Detail',
+    'The Reset (deep clean)': 'The Reset', 'Upkeep visit': 'Upkeep',
   };
-  // Pet hair and stains are priced by how much there is. Add-ons not listed here are quoted after review.
-  const ADDON_PRICES = {
-    'Pet hair removal: some': 50,
-    'Pet hair removal: a lot': 100,
-    'Stain treatment: a few spots': 60,
-    'Stain treatment: lots or large': 100,
-    'Headlight restoration': 50,
-  };
-  // Conditions not in CONDITION_ADJUSTMENTS (Full reset) are quoted after photos.
-  // Taken off the estimate when the customer checks "first detail" on the contact step.
-  const NEW_CUSTOMER_DISCOUNT = 20;
 
-  form.classList.add('is-wizard');
-  const steps = [...form.querySelectorAll('.q-step')];
-  const bar = form.querySelector('.q-progress i');
-  const count = form.querySelector('.q-count');
-  const err = form.querySelector('.q-error');
-  const back = form.querySelector('[data-back]');
-  const next = form.querySelector('[data-next]');
-  const total = form.querySelector('#quote-total');
-  const disclaimer = form.querySelector('#quote-disclaimer');
+  const steps = [...form.querySelectorAll('.b-step')];
+  const progress = [...document.querySelectorAll('[data-progress]')];
+  const err = form.querySelector('.b-error');
   const subject = form.querySelector('#quote-subject');
-  const baseField = form.querySelector('#base-price');
-  const adjustmentField = form.querySelector('#condition-adjustment');
-  const estimateField = form.querySelector('#total-estimate');
-  const addOnSummary = form.querySelector('#summary-addons');
-  const breakdown = form.querySelector('#quote-breakdown');
+  const startingField = form.querySelector('#starting-price');
   const newCustomer = form.querySelector('#new-customer');
   const discountField = form.querySelector('#new-customer-discount');
   let i = 0;
 
-  const PKG = { interior: 'Interior detail', exterior: 'Exterior detail', full: 'Full detail', deep: 'Deep-clean detail' };
-  const preselected = PKG[new URLSearchParams(location.search).get('package')];
-  if (preselected) {
-    const radio = form.querySelector(`input[name="service"][value="${preselected}"]`);
-    if (radio) radio.checked = true;
+  const selected = (name) => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
+  const serviceName = (value) => NAMES[value] || value.replace('Waitlist: ', '');
+  const isWaitlist = (value) => value.startsWith('Waitlist: ');
+  const vehicleLabel = (value) => value.replace(' - ', ', ');
+  const priceFor = (service, size) => PRICES[service]?.[VEHICLES.indexOf(size)];
+
+  function summary() {
+    const service = selected('service');
+    const size = selected('size');
+    const price = priceFor(service, size);
+    return [serviceName(service), size && vehicleLabel(size), isWaitlist(service) ? 'waitlist' : price && `from $${price}`]
+      .filter(Boolean).join(' · ');
   }
 
-  const selected = (name) => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
-  const formatPrice = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
-  const addOnPrice = (addOn, size) => {
-    const price = ADDON_PRICES[addOn];
-    return typeof price === 'number' ? price : price?.[size];
-  };
-
-  function updateEstimate() {
-    const size = selected('size');
+  function refresh() {
     const service = selected('service');
-    const condition = selected('condition');
-    const amount = PRICES[size]?.[service];
-    const adjustment = CONDITION_ADJUSTMENTS[condition]?.[size];
-    const selectedAddOns = [...form.querySelectorAll('input[name="addon_options"]:checked')].map((checkbox) => checkbox.value);
-    const addOnTotal = selectedAddOns.reduce((sum, addOn) => sum + (addOnPrice(addOn, size) || 0), 0);
-    const separatelyQuotedAddOns = selectedAddOns.filter((addOn) => addOnPrice(addOn, size) == null);
-    const isCustom = service === 'Deep-clean detail' || amount == null || (condition && adjustment == null);
-    const discount = newCustomer?.checked ? NEW_CUSTOMER_DISCOUNT : 0;
-    const discountNote = discount ? ` Your ${formatPrice(discount)} new customer discount comes off the final price.` : '';
-    discountField.value = discount ? `-${formatPrice(discount)} first detail` : 'None';
-    form.querySelector('#summary-size').textContent = size || 'Not selected';
-    form.querySelector('#summary-service').textContent = service || 'Not selected';
-    form.querySelector('#summary-condition').textContent = condition || 'Not selected';
-    addOnSummary.textContent = selectedAddOns.length
-      ? selectedAddOns.map((addOn) => addOnPrice(addOn, size) != null ? `${addOn} (+${formatPrice(addOnPrice(addOn, size))})` : `${addOn} (quoted separately)`).join(', ')
-      : 'None selected';
-
-    if (isCustom) {
-      total.textContent = 'Custom quote';
-      breakdown.textContent = 'Final price confirmed after vehicle review.';
-      form.querySelector('#summary-base').textContent = 'Custom';
-      form.querySelector('#summary-condition-price').textContent = 'Reviewed after inspection';
-      baseField.value = 'Custom quote required';
-      adjustmentField.value = 'Reviewed after inspection';
-      estimateField.value = 'Custom quote required';
-      subject.value = 'New Clean Auto Care custom quote request';
-      disclaimer.textContent = `Deep-clean work is quoted after we review the vehicle condition, photos and requested work.${discountNote} No deposit or payment is collected online.`;
-      return;
-    }
-
-    const basePrice = formatPrice(amount);
-    const conditionPrice = formatPrice(adjustment || 0);
-    const estimate = amount + (adjustment || 0) + addOnTotal - discount;
-    const price = formatPrice(estimate);
-    total.textContent = price;
-    breakdown.textContent = `Base ${basePrice} + condition ${conditionPrice} + add-ons ${formatPrice(addOnTotal)}${discount ? ` − ${formatPrice(discount)} new customer` : ''} = ${price}`;
-    form.querySelector('#summary-base').textContent = basePrice;
-    form.querySelector('#summary-condition-price').textContent = adjustment > 0 ? `+${conditionPrice}` : 'Included';
-    baseField.value = basePrice;
-    adjustmentField.value = adjustment > 0 ? `+${conditionPrice}` : '$0';
-    estimateField.value = `${price} estimated total (includes ${formatPrice(addOnTotal)} for selected add-ons${discount ? `, minus ${formatPrice(discount)} new customer discount` : ''})`;
-    subject.value = `Clean Auto Care estimate request: ${price} — ${size}`;
-    disclaimer.textContent = separatelyQuotedAddOns.length
-      ? `This is an estimate, not a final price. It can go up or down once we see your vehicle's size and condition. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review.`
-      : `This is an estimate, not a final price. It can go up or down once we see your vehicle's size and condition.`;
+    const size = selected('size');
+    // Menu-style selected state (also handled by :has() in the CSS; this covers older browsers).
+    form.querySelectorAll('.b-option').forEach((option) => option.classList.toggle('is-picked', option.querySelector('input').checked));
+    // Each vehicle shows its price for the chosen service.
+    form.querySelectorAll('input[name="size"]').forEach((input) => {
+      const price = priceFor(service, input.value);
+      input.closest('.b-option').querySelector('.b-item-price').textContent = price ? `$${price}` : (isWaitlist(service) ? '' : 'Quoted');
+    });
+    form.querySelector('#vehicle-service').textContent = serviceName(service);
+    form.querySelector('#contact-summary').textContent = summary();
+    const values = [serviceName(service), size ? vehicleLabel(size) : '', ''];
+    progress.forEach((row, n) => {
+      row.lastElementChild.textContent = values[n];
+      row.classList.toggle('is-done', n < i);
+      row.classList.toggle('is-current', n === i);
+    });
   }
 
   // Funnel tracking for the Meta Pixel and Google Analytics. Each milestone fires once per visit.
-  // No contact details are sent, only the vehicle, service, condition and the price shown.
+  // No contact details are sent, only the service and vehicle.
   const tracked = new Set();
-  function trackStep(n) {
-    const milestones = { 1: ['QuoteStarted', 'quote_start'], [steps.length - 2]: ['QuoteContactStep', 'quote_contact_step'], [steps.length - 1]: ['QuoteEstimateViewed', 'quote_estimate_view'] };
-    const milestone = milestones[n];
-    if (!milestone || tracked.has(n)) return;
-    tracked.add(n);
-    const params = { vehicle: selected('size'), service: selected('service'), condition: selected('condition') };
-    const value = parseInt(total.textContent.replace(/[^0-9]/g, ''), 10);
-    if (n === steps.length - 1 && value) Object.assign(params, { value, currency: 'USD' });
-    if (window.fbq) window.fbq('trackCustom', milestone[0], params);
-    if (window.gtag) window.gtag('event', milestone[1], params);
+  function track(meta, ga) {
+    if (tracked.has(meta)) return;
+    tracked.add(meta);
+    const params = { service: selected('service'), vehicle: selected('size') };
+    if (window.fbq) window.fbq('trackCustom', meta, params);
+    if (window.gtag) window.gtag('event', ga, params);
   }
 
   function show(n, scroll) {
     i = n;
     steps.forEach((step, index) => { step.hidden = index !== n; });
-    bar.style.width = `${((n + 1) / steps.length) * 100}%`;
-    count.textContent = '';
     err.textContent = '';
-    back.style.visibility = n === 0 ? 'hidden' : 'visible';
-    next.style.display = n === steps.length - 1 ? 'none' : '';
-    if (n === steps.length - 1) updateEstimate();
-    trackStep(n);
+    refresh();
+    if (n === steps.length - 1) track('QuoteContactStep', 'quote_contact_step');
     if (scroll) {
-      // Only scroll if the top of the form is hidden behind the header; otherwise leave the page alone.
+      // Bring the panel into view when the next step would start above or far below the screen.
+      const top = form.getBoundingClientRect().top;
       const header = document.querySelector('.site-header');
       const limit = (header ? header.offsetHeight : 0) + 12;
-      const top = form.getBoundingClientRect().top;
-      if (top < limit) window.scrollBy({ top: top - limit, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      if (top < limit || top > window.innerHeight * 0.6) {
+        form.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
     }
   }
 
-  function validStep() {
-    const step = steps[i];
-    if (step.dataset.require === 'choice' && !step.querySelector('input:checked')) {
-      err.textContent = 'Please choose an option to continue.';
-      return false;
-    }
-    const invalid = [...step.querySelectorAll('[required]')].find((field) => !field.checkValidity());
-    if (invalid) {
-      err.textContent = 'Please complete the required fields before continuing.';
-      invalid.focus();
-      return false;
-    }
-    return true;
-  }
+  // A menu link on the homepage (?package=…) arrives with that service picked, on the vehicle step.
+  const pkg = new URLSearchParams(location.search).get('package');
+  const preset = pkg && form.querySelector(`input[name="service"][data-package="${CSS.escape(pkg)}"]`);
+  if (preset) preset.checked = true;
 
-  function go(direction) {
-    if (direction > 0 && !validStep()) return;
-    show(Math.min(Math.max(i + direction, 0), steps.length - 1), true);
-  }
-
-  form.addEventListener('click', (event) => {
-    if (event.target.closest('[data-next]')) go(1);
-    else if (event.target.closest('[data-back]')) go(-1);
-  });
   form.addEventListener('change', (event) => {
-    // Pet hair and stains each have two amounts; checking one unchecks the other.
-    const group = event.target.dataset.oneOf;
-    if (group && event.target.checked) {
-      form.querySelectorAll(`input[data-one-of="${group}"]`).forEach((box) => { if (box !== event.target) box.checked = false; });
-    }
-    if (!event.target.matches('input[type="radio"]')) return;
-    updateEstimate();
-    if (steps[i]?.dataset.auto !== undefined) {
-      window.setTimeout(() => go(1), 180);
+    const input = event.target;
+    if (input.name === 'service' || input.name === 'size') {
+      track('QuoteStarted', 'quote_start');
+      window.setTimeout(() => show(input.name === 'service' ? 1 : 2, true), 180);
+    } else {
+      refresh();
     }
   });
-  form.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' && event.target.tagName === 'INPUT' && event.target.type !== 'submit' && i < steps.length - 1) {
-      event.preventDefault();
-      go(1);
-    }
+  form.addEventListener('click', (event) => {
+    if (event.target.closest('[data-back]')) show(Math.max(i - 1, 0), true);
   });
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    const invalid = [...steps[2].querySelectorAll('[required]')].find((field) => !field.checkValidity());
+    if (invalid) {
+      err.textContent = invalid.type === 'checkbox' ? 'Please check the box to agree to texts about your request.' : 'Please add your name and phone number.';
+      invalid.focus();
+      return;
+    }
     const digits = form.elements.phone.value.replace(/\D/g, '');
     if (!(digits.length === 10 || (digits.length === 11 && digits[0] === '1'))) {
       err.textContent = 'Please enter a 10-digit phone number we can reach you at.';
       form.elements.phone.focus();
       return;
     }
-    updateEstimate();
-    form.querySelector('#addons-joined').value = [...form.querySelectorAll('input[name="addon_options"]:checked')].map((checkbox) => checkbox.value).join(', ') || 'None';
-    const submit = form.querySelector('.q-submit');
+    const service = selected('service');
+    const size = selected('size');
+    const price = priceFor(service, size);
+    startingField.value = isWaitlist(service) ? 'Waitlist (spring 2027)' : price ? `$${price} (menu starting price, light condition)` : 'Custom quote';
+    discountField.value = newCustomer.checked ? '-$20 first detail' : 'None';
+    subject.value = `Clean Auto Care ${isWaitlist(service) ? 'waitlist' : 'request'}: ${serviceName(service)}, ${vehicleLabel(size)}`;
+
+    const submit = form.querySelector('[type="submit"]');
     submit.disabled = true;
     err.textContent = 'Sending your request…';
-
     try {
       const endpoint = form.action.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: new FormData(form),
-      });
+      const response = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
       if (!response.ok) throw new Error(`FormSubmit returned ${response.status}`);
       window.location.assign(form.querySelector('[name="_next"]').value);
     } catch (error) {
@@ -214,5 +139,6 @@
       err.textContent = 'We could not send your request. Please try again, or call or text 608-448-7757.';
     }
   });
-  show(0, false);
+
+  show(preset ? 1 : 0, false);
 })();
