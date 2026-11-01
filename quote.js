@@ -86,7 +86,7 @@
       baseField.value = 'Custom quote required';
       adjustmentField.value = 'Reviewed after inspection';
       estimateField.value = 'Custom quote required';
-      subject.value = 'New accepted Clean Auto Care custom quote request';
+      subject.value = 'New Clean Auto Care custom quote request';
       disclaimer.textContent = `Deep-clean work is quoted after we review the vehicle condition, photos and requested work.${discountNote} No deposit or payment is collected online.`;
       return;
     }
@@ -102,10 +102,10 @@
     baseField.value = basePrice;
     adjustmentField.value = adjustment > 0 ? `+${conditionPrice}` : '$0';
     estimateField.value = `${price} estimated total (includes ${formatPrice(addOnTotal)} for selected add-ons${discount ? `, minus ${formatPrice(discount)} new customer discount` : ''})`;
-    subject.value = `Accepted Clean Auto Care estimate: ${price} — ${size}`;
+    subject.value = `Clean Auto Care estimate request: ${price} — ${size}`;
     disclaimer.textContent = separatelyQuotedAddOns.length
-      ? `This estimate includes ${formatPrice(addOnTotal)} for selected add-ons. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review. Travel or an in-person inspection may also require an updated estimate. No deposit or payment is collected online.`
-      : `This estimate includes ${formatPrice(addOnTotal)} for selected add-ons. Travel or an in-person inspection may require an updated estimate. No deposit or payment is collected online.`;
+      ? `This is an estimate, not a final price. It can go up or down once we see your vehicle's size and condition. ${separatelyQuotedAddOns.join(' and ')} ${separatelyQuotedAddOns.length === 1 ? 'is' : 'are'} priced separately after review.`
+      : `This is an estimate, not a final price. It can go up or down once we see your vehicle's size and condition.`;
   }
 
   // Funnel tracking for the Meta Pixel and Google Analytics. Each milestone fires once per visit.
